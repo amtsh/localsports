@@ -2,17 +2,16 @@
 
 import { useState } from "react";
 
-const dummySessions: Record<
-  string,
-  {
-    venue: string;
-    sport: string;
-    time: string;
-    spots: number;
-    cost: string;
-    level: string;
-  }[]
-> = {
+interface Session {
+  venue: string;
+  sport: string;
+  time: string;
+  spots: number;
+  cost: string;
+  level: string;
+}
+
+const dummySessions: Record<string, Session[]> = {
   "11234": [
     {
       venue: "Arena Gym",
@@ -43,10 +42,8 @@ const dummySessions: Record<
 
 export default function Home() {
   const [area, setArea] = useState("");
-  const [sessions, setSessions] = useState<
-    (typeof dummySessions)["11234"] | null
-  >(null);
-  const [selected, setSelected] = useState<any>(null);
+  const [sessions, setSessions] = useState<Session[] | null>(null);
+  const [selected, setSelected] = useState<Session | null>(null);
   const [messengerId, setMessengerId] = useState("");
   const [customMessage, setCustomMessage] = useState("");
   const [levelFilter, setLevelFilter] = useState("All");
@@ -58,7 +55,7 @@ export default function Home() {
     setSelected(null);
   };
 
-  const handleRequest = (session: any) => {
+  const handleRequest = (session: Session) => {
     setSelected(session);
   };
 
@@ -75,17 +72,17 @@ export default function Home() {
     closeForm();
   };
 
-  const groupByVenue = (sessions: any[]) => {
+  const groupByVenue = (sessions: Session[]): Record<string, Session[]> => {
     return sessions.reduce((groups, session) => {
       if (!groups[session.venue]) {
         groups[session.venue] = [];
       }
       groups[session.venue].push(session);
       return groups;
-    }, {} as Record<string, typeof sessions>);
+    }, {} as Record<string, Session[]>);
   };
 
-  const applyFilters = (session: any) => {
+  const applyFilters = (session: Session) => {
     const matchLevel = levelFilter === "All" || session.level === levelFilter;
     const matchCost = !onlyFree || session.cost === "Free";
     const matchSport = sportFilter === "All" || session.sport === sportFilter;
@@ -168,93 +165,97 @@ export default function Home() {
           <h2 className="text-lg font-semibold text-green-400">
             Sessions near {area}
           </h2>
-          {Object.entries(groupByVenue(sessions)).map(
-            ([venue, venueSessions], vIdx) => (
+          {Object.entries(groupByVenue(sessions || [])).map(
+            ([venue, venueSessions]: [string, Session[]], vIdx) => (
               <div key={vIdx}>
                 <h3 className="text-base font-bold text-white mb-3">{venue}</h3>
                 <div className="space-y-4">
-                  {venueSessions.filter(applyFilters).map((s, idx) => (
-                    <div
-                      key={idx}
-                      className="bg-neutral-900 border border-neutral-800 p-6 rounded-2xl shadow-md hover:shadow-xl transition"
-                    >
-                      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-                        <div className="flex-1">
-                          <p
-                            className={`font-semibold mb-1 text-sm ${
-                              s.time.startsWith("Today")
-                                ? "text-red-400"
-                                : "text-green-400"
-                            }`}
-                          >
-                            {s.time}
-                          </p>
-                          <div className="flex items-center gap-2 mb-1">
-                            <h4 className="text-xl font-bold tracking-tight text-white">
-                              {s.sport}
-                            </h4>
-                            <span className="text-sm font-medium bg-neutral-800 border border-neutral-700 rounded-full px-3 py-0.5 text-neutral-300">
-                              {s.level}
-                            </span>
-                          </div>
-                          <p className="text-neutral-300 font-medium text-sm">
-                            Cost: {s.cost}
-                          </p>
-                        </div>
-                        {!selected ||
-                        selected.venue !== s.venue ||
-                        selected.time !== s.time ? (
-                          <div className="flex flex-col items-end gap-2">
-                            <button
-                              className="text-green-400 hover:text-white border border-green-400 px-5 py-2 rounded-full font-semibold text-sm transition-colors"
-                              onClick={() => handleRequest(s)}
+                  {venueSessions
+                    .filter(applyFilters)
+                    .map((session: Session, index: number) => (
+                      <div
+                        key={`${venue}-${index}`}
+                        className="bg-neutral-900 border border-neutral-800 p-6 rounded-2xl shadow-md hover:shadow-xl transition"
+                      >
+                        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                          <div className="flex-1">
+                            <p
+                              className={`font-semibold mb-1 text-sm ${
+                                session.time.startsWith("Today")
+                                  ? "text-red-400"
+                                  : "text-green-400"
+                              }`}
                             >
-                              Request to Join
-                            </button>
-                            <p className="text-neutral-400 text-sm">
-                              {s.spots} spot(s) left
+                              {session.time}
+                            </p>
+                            <div className="flex items-center gap-2 mb-1">
+                              <h4 className="text-xl font-bold tracking-tight text-white">
+                                {session.sport}
+                              </h4>
+                              <span className="text-sm font-medium bg-neutral-800 border border-neutral-700 rounded-full px-3 py-0.5 text-neutral-300">
+                                {session.level}
+                              </span>
+                            </div>
+                            <p className="text-neutral-300 font-medium text-sm">
+                              Cost: {session.cost}
                             </p>
                           </div>
-                        ) : null}
-                      </div>
-                      {selected?.venue === s.venue &&
-                        selected?.time === s.time && (
-                          <div className="mt-6 border-t border-neutral-800 pt-4">
-                            <div className="flex justify-between items-center mb-4">
-                              <h4 className="font-medium text-white text-base">
-                                Request to Join
-                              </h4>
+                          {!selected ||
+                          selected.venue !== session.venue ||
+                          selected.time !== session.time ? (
+                            <div className="flex flex-col items-end gap-2">
                               <button
-                                onClick={closeForm}
-                                className="text-neutral-500 hover:text-white text-2xl leading-none"
+                                className="text-green-400 hover:text-white border border-green-400 px-5 py-2 rounded-full font-semibold text-sm transition-colors"
+                                onClick={() => handleRequest(session)}
                               >
-                                &times;
+                                Request to Join
+                              </button>
+                              <p className="text-neutral-400 text-sm">
+                                {session.spots} spot(s) left
+                              </p>
+                            </div>
+                          ) : null}
+                        </div>
+                        {selected?.venue === session.venue &&
+                          selected?.time === session.time && (
+                            <div className="mt-6 border-t border-neutral-800 pt-4">
+                              <div className="flex justify-between items-center mb-4">
+                                <h4 className="font-medium text-white text-base">
+                                  Request to Join
+                                </h4>
+                                <button
+                                  onClick={closeForm}
+                                  className="text-neutral-500 hover:text-white text-2xl leading-none"
+                                >
+                                  &times;
+                                </button>
+                              </div>
+                              <input
+                                type="text"
+                                placeholder="Your Messenger ID"
+                                className="w-full p-3 rounded-lg bg-neutral-800 border border-neutral-700 placeholder-neutral-500 text-white text-sm"
+                                value={messengerId}
+                                onChange={(e) => setMessengerId(e.target.value)}
+                              />
+                              <textarea
+                                placeholder="Message to Host (optional)"
+                                className="w-full p-3 mt-3 rounded-lg bg-neutral-800 border border-neutral-700 placeholder-neutral-500 text-white text-sm"
+                                rows={3}
+                                value={customMessage}
+                                onChange={(e) =>
+                                  setCustomMessage(e.target.value)
+                                }
+                              />
+                              <button
+                                className="mt-4 w-full bg-green-500 hover:bg-green-400 transition text-black font-bold px-5 py-3 rounded-lg shadow text-sm"
+                                onClick={sendRequest}
+                              >
+                                Send Request
                               </button>
                             </div>
-                            <input
-                              type="text"
-                              placeholder="Your Messenger ID"
-                              className="w-full p-3 rounded-lg bg-neutral-800 border border-neutral-700 placeholder-neutral-500 text-white text-sm"
-                              value={messengerId}
-                              onChange={(e) => setMessengerId(e.target.value)}
-                            />
-                            <textarea
-                              placeholder="Message to Host (optional)"
-                              className="w-full p-3 mt-3 rounded-lg bg-neutral-800 border border-neutral-700 placeholder-neutral-500 text-white text-sm"
-                              rows={3}
-                              value={customMessage}
-                              onChange={(e) => setCustomMessage(e.target.value)}
-                            />
-                            <button
-                              className="mt-4 w-full bg-green-500 hover:bg-green-400 transition text-black font-bold px-5 py-3 rounded-lg shadow text-sm"
-                              onClick={sendRequest}
-                            >
-                              Send Request
-                            </button>
-                          </div>
-                        )}
-                    </div>
-                  ))}
+                          )}
+                      </div>
+                    ))}
                 </div>
               </div>
             )
