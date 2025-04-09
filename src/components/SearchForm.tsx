@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { Session, SessionSearchFilters } from "../types";
 import { getSportOptions } from "../lib/utils";
 
@@ -37,7 +36,7 @@ export default function SearchForm({
         />
         <button
           className="bg-green-500 hover:bg-green-400 transition text-black font-semibold px-5 py-2 rounded-xl shadow-md text-sm"
-          onClick={() => onSearch()}
+          onClick={() => onSearch(area)}
         >
           Search
         </button>
