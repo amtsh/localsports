@@ -196,7 +196,7 @@ export default function Home() {
                                 {session.level}
                               </span>
                             </div>
-                            <p className="text-neutral-300 font-medium text-sm">
+                            <p className="text-neutral-300 font-medium text-sm mt-2">
                               Cost: {session.cost}
                             </p>
                           </div>
