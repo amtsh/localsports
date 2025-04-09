@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-
+import { X } from "lucide-react";
 interface Session {
   venue: string;
   sport: string;
@@ -41,7 +41,7 @@ const dummySessions: Record<string, Session[]> = {
 };
 
 export default function Home() {
-  const [area, setArea] = useState("");
+  const [area, setArea] = useState("11234");
   const [sessions, setSessions] = useState<Session[] | null>(null);
   const [selected, setSelected] = useState<Session | null>(null);
   const [messengerId, setMessengerId] = useState("");
@@ -96,16 +96,16 @@ export default function Home() {
   return (
     <main className="min-h-screen text-white px-6 py-12 max-w-3xl mx-auto font-sans text-sm leading-tight">
       <header className="mb-14">
-        <h1 className="text-4xl font-bold text-green-400 tracking-tight">
+        <h1 className="text-3xl font-bold text-green-400 tracking-tight">
           GameOn
         </h1>
-        <p className="text-neutral-400 mt-2 text-base">
+        <p className="text-neutral-400 mt-2 text-md">
           Discover and join local sports sessions instantly.
         </p>
       </header>
 
       <section className="bg-neutral-900 border border-neutral-800 rounded-3xl p-6 mb-10 shadow-xl">
-        <h2 className="text-xl font-semibold mb-4">
+        <h2 className="text-3xl font-semibold mb-8">
           Join a sports session near you
         </h2>
         <div className="flex flex-col sm:flex-row items-stretch gap-4 mb-5">
@@ -162,8 +162,8 @@ export default function Home() {
 
       {sessions && (
         <section className="space-y-10">
-          <h2 className="text-lg font-semibold text-green-400">
-            Sessions near {area}
+          <h2 className="text-lg font-semibold text-neutral-400">
+            Sessions near: {area}
           </h2>
           {Object.entries(groupByVenue(sessions || [])).map(
             ([venue, venueSessions]: [string, Session[]], vIdx) => (
@@ -205,14 +205,11 @@ export default function Home() {
                           selected.time !== session.time ? (
                             <div className="flex flex-col items-end gap-2">
                               <button
-                                className="text-green-400 hover:text-white border border-green-400 px-5 py-2 rounded-full font-semibold text-sm transition-colors"
+                                className="text-green-400 hover:text-white border border-green-400 px-5 py-2 rounded-full font-semibold text-sm transition-colors cursor-pointer"
                                 onClick={() => handleRequest(session)}
                               >
                                 Request to Join
                               </button>
-                              <p className="text-neutral-400 text-sm">
-                                {session.spots} spot(s) left
-                              </p>
                             </div>
                           ) : null}
                         </div>
@@ -225,9 +222,9 @@ export default function Home() {
                                 </h4>
                                 <button
                                   onClick={closeForm}
-                                  className="text-neutral-500 hover:text-white text-2xl leading-none"
+                                  className="text-neutral-500 hover:text-white hover:bg-neutral-800 rounded-full p-1 cursor-pointer text-2xl leading-none"
                                 >
-                                  &times;
+                                  <X />
                                 </button>
                               </div>
                               <input
