@@ -14,3 +14,8 @@ export interface SessionSearchFilters {
   onlyFree: boolean;
   sportFilter: string;
 }
+
+export enum Path {
+  search = "/",
+  create = "create",
+}

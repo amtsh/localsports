@@ -24,3 +24,9 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+@layer utilities {
+  .glass-morphism {
+    @apply backdrop-blur-lg bg-black/30 border border-white/20;
+  }
+}

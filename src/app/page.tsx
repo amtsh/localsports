@@ -2,16 +2,12 @@
 
 import { useState } from "react";
 import { X } from "lucide-react";
-interface Session {
-  venue: string;
-  sport: string;
-  time: string;
-  spots: number;
-  cost: string;
-  level: string;
-}
+import { Session, SessionList } from "@/types";
+import { Input } from "@/components/Input";
+import { Button } from "@/components/Button";
+import { Textarea } from "@/components/Textarea";
 
-const dummySessions: Record<string, Session[]> = {
+const dummySessions: SessionList = {
   "11234": [
     {
       venue: "Arena Gym",
@@ -109,19 +105,13 @@ export default function Home() {
           Join a sports session near you
         </h2>
         <div className="flex flex-col sm:flex-row items-stretch gap-4 mb-5">
-          <input
+          <Input
             type="text"
             placeholder="Enter area code (e.g. 11234)"
-            className="flex-1 p-3 rounded-xl bg-neutral-800 text-white placeholder-neutral-500 border border-neutral-700 focus:outline-none focus:ring-2 focus:ring-green-400 text-sm"
             value={area}
             onChange={(e) => setArea(e.target.value)}
           />
-          <button
-            className="bg-green-500 hover:bg-green-400 transition text-black font-semibold px-5 py-2 rounded-xl shadow-md text-sm"
-            onClick={handleSearch}
-          >
-            Search
-          </button>
+          <Button onClick={handleSearch}>Search</Button>
         </div>
         {sessions && (
           <div className="flex flex-wrap gap-4">
@@ -204,12 +194,12 @@ export default function Home() {
                           selected.venue !== session.venue ||
                           selected.time !== session.time ? (
                             <div className="flex flex-col items-end gap-2">
-                              <button
-                                className="text-green-400 hover:text-white border border-green-400 px-5 py-2 rounded-full font-semibold text-sm transition-colors cursor-pointer"
+                              <Button
+                                variant="outline"
                                 onClick={() => handleRequest(session)}
                               >
                                 Request to Join
-                              </button>
+                              </Button>
                             </div>
                           ) : null}
                         </div>
@@ -227,28 +217,27 @@ export default function Home() {
                                   <X />
                                 </button>
                               </div>
-                              <input
-                                type="text"
+                              <Input
                                 placeholder="Your Messenger ID"
-                                className="w-full p-3 rounded-lg bg-neutral-800 border border-neutral-700 placeholder-neutral-500 text-white text-sm"
                                 value={messengerId}
                                 onChange={(e) => setMessengerId(e.target.value)}
                               />
-                              <textarea
+                              <Textarea
                                 placeholder="Message to Host (optional)"
-                                className="w-full p-3 mt-3 rounded-lg bg-neutral-800 border border-neutral-700 placeholder-neutral-500 text-white text-sm"
                                 rows={3}
                                 value={customMessage}
                                 onChange={(e) =>
                                   setCustomMessage(e.target.value)
                                 }
+                                className="mt-3"
                               />
-                              <button
-                                className="mt-4 w-full bg-green-500 hover:bg-green-400 transition text-black font-bold px-5 py-3 rounded-lg shadow text-sm"
+                              <Button
+                                fullWidth
+                                className="mt-4"
                                 onClick={sendRequest}
                               >
                                 Send Request
-                              </button>
+                              </Button>
                             </div>
                           )}
                       </div>
