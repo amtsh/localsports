@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Input } from "@/components/Input";
 import { Button } from "@/components/Button";
 import { Textarea } from "@/components/Textarea";
+import { Select } from "@/components/Select";
 
 export default function CreateVenue() {
   const [formData, setFormData] = useState({
@@ -43,78 +44,76 @@ export default function CreateVenue() {
       </header>
 
       <form onSubmit={handleSubmit} className="space-y-6">
-        <div className="space-y-2">
-          <Input
-            id="name"
-            name="name"
-            label="Venue Name"
-            value={formData.name}
-            onChange={handleChange}
-            placeholder="Enter venue name"
-            className="bg-stone-800 border-stone-700 text-stone-200"
-          />
-        </div>
+        <Select
+          id="sport"
+          name="sport"
+          label="Sport"
+          options={[]}
+          value={formData.sport}
+          onChange={handleChange}
+        />
 
-        <div className="space-y-2">
-          <Textarea
-            id="description"
-            name="description"
-            label="Description"
-            value={formData.description}
-            onChange={handleChange}
-            placeholder="Describe your venue"
-            className="bg-stone-800 border-stone-700 text-stone-200 min-h-[100px]"
-          />
-        </div>
+        <Input
+          id="name"
+          name="name"
+          label="Venue Name"
+          value={formData.name}
+          onChange={handleChange}
+          placeholder="Enter venue name"
+          className="bg-stone-800 border-stone-700 text-stone-200"
+        />
 
-        <div className="space-y-2">
-          <Input
-            id="address"
-            name="address"
-            label="Address"
-            value={formData.address}
-            onChange={handleChange}
-            placeholder="Street address"
-            className="bg-stone-800 border-stone-700 text-stone-200"
-          />
-        </div>
+        <Textarea
+          id="description"
+          name="description"
+          label="Description"
+          value={formData.description}
+          onChange={handleChange}
+          placeholder="Describe your venue"
+          className="bg-stone-800 border-stone-700 text-stone-200 min-h-[100px]"
+        />
+
+        <Input
+          id="address"
+          name="address"
+          label="Address"
+          value={formData.address}
+          onChange={handleChange}
+          placeholder="Street address"
+          className="bg-stone-800 border-stone-700 text-stone-200"
+        />
 
         <div className="grid grid-cols-2 gap-4">
-          <div className="space-y-2">
-            <Input
-              id="city"
-              name="city"
-              label="City"
-              value={formData.city}
-              onChange={handleChange}
-              placeholder="City"
-              className="bg-stone-800 border-stone-700 text-stone-200"
-            />
-          </div>
-          <div className="space-y-2">
-            <Input
-              id="state"
-              name="state"
-              label="State"
-              value={formData.state}
-              onChange={handleChange}
-              placeholder="State"
-              className="bg-stone-800 border-stone-700 text-stone-200"
-            />
-          </div>
-        </div>
-
-        <div className="space-y-2">
           <Input
-            id="zipCode"
-            name="zipCode"
-            label="ZIP Code"
-            value={formData.zipCode}
+            id="city"
+            name="city"
+            label="City"
+            value={formData.city}
             onChange={handleChange}
-            placeholder="ZIP code"
+            placeholder="City"
+            className="bg-stone-800 border-stone-700 text-stone-200"
+          />
+
+          <Input
+            id="state"
+            name="state"
+            label="State"
+            value={formData.state}
+            onChange={handleChange}
+            placeholder="State"
             className="bg-stone-800 border-stone-700 text-stone-200"
           />
         </div>
+
+        <Input
+          id="zipCode"
+          name="zipCode"
+          label="ZIP Code"
+          value={formData.zipCode}
+          onChange={handleChange}
+          placeholder="ZIP code"
+          className="bg-stone-800 border-stone-700 text-stone-200"
+        />
 
         <Button
           type="submit"

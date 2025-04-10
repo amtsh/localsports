@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { X } from "lucide-react";
-import { Session, SessionList } from "@/types";
+import { Session, SessionList, sports } from "@/types";
 import { Input } from "@/components/Input";
 import { Button } from "@/components/Button";
 import { Textarea } from "@/components/Textarea";
@@ -12,7 +12,7 @@ const dummySessions: SessionList = {
   "11234": [
     {
       venue: "Arena Gym",
-      sport: "Football",
+      sport: { sportId: "football", sportName: "Football" },
       time: "Today 6PM",
       spots: 3,
       cost: "$5",
@@ -20,7 +20,7 @@ const dummySessions: SessionList = {
     },
     {
       venue: "Arena Gym",
-      sport: "Basketball",
+      sport: { sportId: "basketball", sportName: "Basketball" },
       time: "Today 7PM",
       spots: 2,
       cost: "$3",
@@ -28,7 +28,7 @@ const dummySessions: SessionList = {
     },
     {
       venue: "Greenfield Park",
-      sport: "Tennis",
+      sport: { sportId: "tennis", sportName: "Tennis" },
       time: "Tomorrow 10AM",
       spots: 1,
       cost: "Free",
@@ -44,8 +44,8 @@ export default function Home() {
   const [messengerId, setMessengerId] = useState("");
   const [customMessage, setCustomMessage] = useState("");
   const [levelFilter, setLevelFilter] = useState("All");
-  const [onlyFree, setOnlyFree] = useState(false);
   const [sportFilter, setSportFilter] = useState("All");
+  const [onlyFree, setOnlyFree] = useState(false);
 
   const handleSearch = () => {
     setSessions(dummySessions[area] || null);
@@ -82,12 +82,13 @@ export default function Home() {
   const applyFilters = (session: Session) => {
     const matchLevel = levelFilter === "All" || session.level === levelFilter;
     const matchCost = !onlyFree || session.cost === "Free";
-    const matchSport = sportFilter === "All" || session.sport === sportFilter;
+    const matchSport =
+      sportFilter === "All" || session.sport.sportId === sportFilter;
     return matchLevel && matchCost && matchSport;
   };
 
   const sportOptions = Array.from(
-    new Set((sessions || []).map((s) => s.sport))
+    new Set((sessions || []).map((s) => s.sport.sportId))
   );
 
   return (
@@ -129,14 +130,12 @@ export default function Home() {
             <Select
               value={sportFilter}
               onChange={(e) => setSportFilter(e.target.value)}
-              options={[
-                { value: "All", label: "All Sports" },
-                ...sportOptions.map((sport) => ({
-                  value: sport,
-                  label: sport,
-                })),
-              ]}
+              options={sports.map((sport) => ({
+                value: sport.sportId,
+                label: sport.sportName,
+              }))}
             />
+
             <label className="flex items-center gap-2 text-white text-sm">
               <input
                 type="checkbox"
@@ -180,7 +179,7 @@ export default function Home() {
                             </p>
                             <div className="flex items-center gap-2 mb-1">
                               <h4 className="text-xl font-bold tracking-tight text-white">
-                                {session.sport}
+                                {session.sport.sportName}
                               </h4>
                               <span className="text-sm font-medium bg-neutral-800 border border-neutral-700 rounded-full px-3 py-0.5 text-neutral-300">
                                 {session.level}
