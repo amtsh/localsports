@@ -6,6 +6,7 @@ import { Session, SessionList } from "@/types";
 import { Input } from "@/components/Input";
 import { Button } from "@/components/Button";
 import { Textarea } from "@/components/Textarea";
+import { Select } from "@/components/Select";
 
 const dummySessions: SessionList = {
   "11234": [
@@ -115,28 +116,27 @@ export default function Home() {
         </div>
         {sessions && (
           <div className="flex flex-wrap gap-4">
-            <select
-              className="bg-neutral-800 text-white border border-neutral-700 px-4 py-2 rounded-lg text-sm"
+            <Select
               value={levelFilter}
               onChange={(e) => setLevelFilter(e.target.value)}
-            >
-              <option value="All">All Levels</option>
-              <option value="Beginner">Beginner</option>
-              <option value="Intermediate">Intermediate</option>
-              <option value="Advanced">Advanced</option>
-            </select>
-            <select
-              className="bg-neutral-800 text-white border border-neutral-700 px-4 py-2 rounded-lg text-sm"
+              options={[
+                { value: "All", label: "All Levels" },
+                { value: "Beginner", label: "Beginner" },
+                { value: "Intermediate", label: "Intermediate" },
+                { value: "Advanced", label: "Advanced" },
+              ]}
+            />
+            <Select
               value={sportFilter}
               onChange={(e) => setSportFilter(e.target.value)}
-            >
-              <option value="All">All Sports</option>
-              {sportOptions.map((sport) => (
-                <option key={sport} value={sport}>
-                  {sport}
-                </option>
-              ))}
-            </select>
+              options={[
+                { value: "All", label: "All Sports" },
+                ...sportOptions.map((sport) => ({
+                  value: sport,
+                  label: sport,
+                })),
+              ]}
+            />
             <label className="flex items-center gap-2 text-white text-sm">
               <input
                 type="checkbox"
