@@ -5,15 +5,16 @@ import { Input } from "@/components/Input";
 import { Button } from "@/components/Button";
 import { Textarea } from "@/components/Textarea";
 import { Select } from "@/components/Select";
+import { sports } from "@/types";
 
 export default function CreateVenue() {
   const [formData, setFormData] = useState({
+    sport: "",
     name: "",
-    description: "",
     address: "",
-    city: "",
-    state: "",
-    zipCode: "",
+    cost: "",
+    currency: "",
+    description: "",
   });
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -48,71 +49,57 @@ export default function CreateVenue() {
           id="sport"
           name="sport"
           label="Sport"
-          options={[]}
+          options={[
+            { value: "", label: "Select" },
+            ...sports.map((sport) => ({
+              value: sport.sportId,
+              label: sport.sportName,
+            })),
+          ]}
           value={formData.sport}
-          onChange={handleChange}
+          onChange={(e) => setFormData({ ...formData, sport: e.target.value })}
         />
 
         <Input
           id="name"
           name="name"
-          label="Venue Name"
-          value={formData.name}
-          onChange={handleChange}
-          placeholder="Enter venue name"
-          className="bg-stone-800 border-stone-700 text-stone-200"
-        />
-
-        <Textarea
-          id="description"
-          name="description"
-          label="Description"
-          value={formData.description}
-          onChange={handleChange}
-          placeholder="Describe your venue"
-          className="bg-stone-800 border-stone-700 text-stone-200 min-h-[100px]"
-        />
-
-        <Input
-          id="address"
-          name="address"
-          label="Address"
+          label="Where is the game happening?"
           value={formData.address}
           onChange={handleChange}
-          placeholder="Street address"
+          placeholder="Venue address"
           className="bg-stone-800 border-stone-700 text-stone-200"
         />
 
         <div className="grid grid-cols-2 gap-4">
           <Input
-            id="city"
-            name="city"
-            label="City"
-            value={formData.city}
+            id="cost"
+            name="cost"
+            label="Cost to join"
+            value={formData.cost}
             onChange={handleChange}
-            placeholder="City"
+            placeholder="30"
             className="bg-stone-800 border-stone-700 text-stone-200"
           />
 
           <Input
-            id="state"
-            name="state"
-            label="State"
-            value={formData.state}
+            id="currency"
+            name="currency"
+            label="Currency"
+            value={formData.currency}
             onChange={handleChange}
-            placeholder="State"
+            placeholder="SEK"
             className="bg-stone-800 border-stone-700 text-stone-200"
           />
         </div>
 
-        <Input
-          id="zipCode"
-          name="zipCode"
-          label="ZIP Code"
-          value={formData.zipCode}
+        <Textarea
+          id="description"
+          name="description"
+          label="More information about the game - (Optional)"
+          value={formData.description}
           onChange={handleChange}
-          placeholder="ZIP code"
-          className="bg-stone-800 border-stone-700 text-stone-200"
+          placeholder="Describe your venue"
+          className="bg-stone-800 border-stone-700 text-stone-200 min-h-[100px]"
         />
 
         <Button
